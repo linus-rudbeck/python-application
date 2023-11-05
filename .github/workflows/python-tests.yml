@@ -1,6 +1,7 @@
 name: Python Test Workflow
 
-on: [push, pull_request] # Trigger the workflow on push and pull request events
+on: [] # Temporarily disable
+# on: [push, pull_request] # Trigger the workflow on push and pull request events
 
 jobs:
   test:
