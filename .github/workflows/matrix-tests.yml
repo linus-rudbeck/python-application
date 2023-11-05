@@ -1,0 +1,43 @@
+name: Python Test Workflow
+
+on: [push, pull_request] # Trigger the workflow on push and pull request events
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7, 3.8, 3.9]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4 # Check out the repository code
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        
+    - name: Cache pip
+      uses: actions/cache@v3 # Cache the pip install directory
+      with:
+        path: ~/.cache/pip # Path to the cached directory
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }} # Cache key
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run tests
+      run: | 
+        pip install pytest pytest-html
+        mkdir -p logs
+        pytest tests/ --html=logs/test-results.html --self-contained-html
+
+    - uses: actions/upload-artifact@v3 # Upload test logs as an artifact
+      # This step will run regardless of previous step results
+      if: always() 
+      with:
+        name: test-logs # Name of the uploaded artifact
+        path: ./**/logs/ # Path to the logs to be uploaded
