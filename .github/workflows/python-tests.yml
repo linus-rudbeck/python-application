@@ -1,0 +1,31 @@
+name: Python Test Workflow
+
+on: [push, pull_request] # Trigger the workflow on push and pull request events
+
+jobs:
+  test:
+    runs-on: ubuntu-latest # Use the latest Ubuntu runner
+
+    steps:
+    - uses: actions/checkout@v4 # Check out the repository code
+
+    - uses: actions/setup-python@v4 # Set up Python
+      with:
+        python-version: '3.8' # Define the Python version to use
+
+    - uses: actions/cache@v3 # Cache the pip install directory
+      with:
+        path: ~/.cache/pip # Path to the cached directory
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }} # Cache key
+
+    - run: | # Install dependencies and run tests
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pytest tests/
+
+    - uses: actions/upload-artifact@v2 # Upload test logs as an artifact
+      # This step will run regardless of previous step results
+      if: always() 
+      with:
+        name: test-logs # Name of the uploaded artifact
+        path: ./**/logs/ # Path to the logs to be uploaded
