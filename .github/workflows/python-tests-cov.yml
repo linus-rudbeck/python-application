@@ -1,6 +1,7 @@
-name: Python Test Workflow
+name: Python Test Workflow COV
 
-on: [push, pull_request] # Trigger the workflow on push and pull request events
+on: [] # Disable this workflow and only use it manually
+# on: [push, pull_request] # Trigger the workflow on push and pull request events
 
 jobs:
   test:

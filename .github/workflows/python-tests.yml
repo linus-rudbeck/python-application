@@ -7,21 +7,30 @@ jobs:
     runs-on: ubuntu-latest # Use the latest Ubuntu runner
 
     steps:
-    - uses: actions/checkout@v4 # Check out the repository code
+    - name: Checkout code
+      uses: actions/checkout@v4 # Check out the repository code
 
-    - uses: actions/setup-python@v4 # Set up Python
+    - name: Set up Python
+      uses: actions/setup-python@v4 # Set up Python
       with:
         python-version: '3.8' # Define the Python version to use
 
-    - uses: actions/cache@v3 # Cache the pip install directory
+    - name: Cache pip
+      uses: actions/cache@v3 # Cache the pip install directory
       with:
         path: ~/.cache/pip # Path to the cached directory
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }} # Cache key
-
-    - run: | # Install dependencies and run tests
+    
+    - name: Install dependencies
+      run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        pytest tests/
+
+    - name: Run tests
+      run: | 
+        pip install pytest pytest-html
+        mkdir -p logs
+        pytest tests/ --html=logs/test-results.html --self-contained-html
 
     - uses: actions/upload-artifact@v3 # Upload test logs as an artifact
       # This step will run regardless of previous step results
