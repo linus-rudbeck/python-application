@@ -1,6 +1,7 @@
 name: Simple CI Workflow
 
-on: [push]
+on: [] # Temporarily disable
+# on: [push]
 
 jobs:
   build:
