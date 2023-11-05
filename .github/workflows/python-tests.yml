@@ -23,7 +23,7 @@ jobs:
         pip install -r requirements.txt
         pytest tests/
 
-    - uses: actions/upload-artifact@v2 # Upload test logs as an artifact
+    - uses: actions/upload-artifact@v3 # Upload test logs as an artifact
       # This step will run regardless of previous step results
       if: always() 
       with:
